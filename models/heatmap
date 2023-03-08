@@ -1,0 +1,6 @@
+AMP_count = output_data.groupby(['Year', 'AMP'])['Isolate'].count().reset_index().rename(columns={"AMP": "Resistance", "Isolate": "AMP"})
+df_sumAMP = AMP_count.groupby(['Year']).sum().rename(columns={"AMP": "SR_AMP_Sum"})
+df_mergeAMP = pd.merge(AMP_count, df_sumAMP,  how='left', on=['Year']).rename(columns={"AMP": "Antibiotic_Value", "SR_AMP_Sum": "Antibitoic_Sum"})
+rslt_dfAMP = df_mergeAMP[df_mergeAMP['Resistance'].isin(R)]
+df_proportionAMP = rslt_dfAMP.assign(Proportion = (rslt_dfAMP.Antibiotic_Value / rslt_dfAMP.Antibitoic_Sum) * 100).assign(Antibiotic_Name = "AMP")
+df_proportionAMP
